@@ -1,0 +1,26 @@
+{
+  "name": "mc-mod-handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "dev": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slushie0/mc-mod-handler.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slushie0/mc-mod-handler/issues"
+  },
+  "homepage": "https://github.com/slushie0/mc-mod-handler#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "electron": "^19.0.10",
+    "electron-dl": "^3.3.1"
+  }
+}

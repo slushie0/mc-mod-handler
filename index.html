@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    
+    <title>Mod Handler</title>
+  </head>
+  <body>
+    <h1>Mod List:</h1>
+    <div id="mod-list-el">
+      <ul id="mod-list"></ul>
+    </div>
+    <div id="add-mod">
+      <input id="mod-slug" type="text" placeholder="Modrinth Slug">
+      <button onclick="addMod()">Add Mod</button>
+    </div>
+    <br>
+    <button onlick="downloadAllMods()">Download/Update all mods</button>
+  </body>
+  <script src="./renderer.js"></script>
+</html>
