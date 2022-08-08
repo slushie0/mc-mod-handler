@@ -30,4 +30,4 @@ function downloadAllMods() {
     url: allModUrls[0],
     properties: {directory: 'C:/Users/eric/Downloads'}
   });
-};
+};test
