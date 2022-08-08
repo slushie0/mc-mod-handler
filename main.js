@@ -4,7 +4,7 @@ const { download } = require('electron-dl');
 ipcMain.on('download-item', async (event, {url}) => {
   let win = BrowserWindow.getFocusedWindow();
   await download(win, url, {
-    directory: "C:/Users/ericr/Downloads"
+    directory: "C:/Users/ericr/Downloads/test"
   })/*.then(
     event.sender.send('download-success', url)
   );*/
