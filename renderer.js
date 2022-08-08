@@ -1,9 +1,5 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require('electron')
 const axios = require('axios');
-
-ipcRenderer.on('download complete', (event, file) => {
-  console.log(file); // Full file path
-});
 
 var allModUrls = [];
 
@@ -25,9 +21,9 @@ function addMod() {
 };
 
 function downloadAllMods() {
-  console.log('starting download')
-  ipcRenderer.send('download', {
-    url: allModUrls[0],
-    properties: {directory: 'C:/Users/eric/Downloads'}
-  });
+  ipcRenderer.send('download-item', {url: allModUrls[0]})
 };
+
+ipcRenderer.on('download-success', (event, arg) => {
+  console.log(arg)
+});

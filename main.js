@@ -1,5 +1,14 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
-const {download} = require("electron-dl");
+const { download } = require('electron-dl');
+
+ipcMain.on('download-item', async (event, {url}) => {
+  let win = BrowserWindow.getFocusedWindow();
+  await download(win, url, {
+    directory: "C:/Users/ericr/Downloads"
+  })/*.then(
+    event.sender.send('download-success', url)
+  );*/
+});
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -11,10 +20,6 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
-  ipcMain.on('download', (event, info) => {
-    download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => win.webContents.send('download complete', dl.getSavePath()));
-  });
 };
 
 app.whenReady().then(() => {
