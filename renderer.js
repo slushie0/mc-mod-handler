@@ -11,23 +11,23 @@ function addMod() {
   let slug = document.getElementById('mod-slug').value;
   let modList = document.getElementById('mod-list');
 
-  $.getJSON(`https://api.modrinth.com/v2/project/${slug}`, res => {
+  axios.get(`https://api.modrinth.com/v2/project/${slug}`).then(res => {
     let item = document.createElement('li');
     item.classList.add('mod-item');
-    item.innerText = res.title;
+    item.innerText = res.data.title;
     modList.appendChild(item);
 
-    $.getJSON(`https://api.modrinth.com/v2/project/${slug}/version`, res2 => {
-      let url = res2[0].files[0].url;
+    axios.get(`https://api.modrinth.com/v2/project/${slug}/version`).then(res2 => {
+      let url = res2.data[0].files[0].url;
       allModUrls.push(url);
     });
   });
 };
 
 function downloadAllMods() {
-  console.log(ipcRenderer)
-  ipcRenderer.send("download", {
+  console.log('starting download')
+  ipcRenderer.send('download', {
     url: allModUrls[0],
-    properties: {directory: "C:/Users/eric/Downloads"}
+    properties: {directory: 'C:/Users/eric/Downloads'}
   });
 };

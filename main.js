@@ -10,13 +10,11 @@ const createWindow = () => {
       contextIsolation: false
     }
   });
-  win.loadURL(`file://${__dirname}/index.html`);
+  win.loadFile('index.html');
   ipcMain.on('download', (event, info) => {
     download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
       .then(dl => win.webContents.send('download complete', dl.getSavePath()));
   });
-
-  win.loadFile('index.html');
 };
 
 app.whenReady().then(() => {
