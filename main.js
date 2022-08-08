@@ -4,7 +4,7 @@ const { download } = require('electron-dl');
 ipcMain.on('download-item', async (event, {url}) => {
   let win = BrowserWindow.getFocusedWindow();
   await download(win, url, {
-    directory: "C:/Users/ericr/Downloads/test"
+    directory: app.getPath('downloads') + '/MC Mod Folder'
   })/*.then(
     event.sender.send('download-success', url)
   );*/
@@ -20,6 +20,7 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
+  win.webContents.send('asynchronous-message', {'appData': app.getPath('appData'), 'downloads': app.getPath('downloads')});
 };
 
 app.whenReady().then(() => {
