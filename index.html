@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     
     <title>Mod Handler</title>
+    <link href="./style.css" rel="stylesheet">
   </head>
   <body>
     <h1>Mod List:</h1>
@@ -13,9 +14,10 @@
     <div id="add-mod">
       <input id="mod-slug" type="text" placeholder="Modrinth Slug">
       <button onclick="addMod()">Add Mod</button>
+      <p id="warning"></p>
     </div>
     <br>
-    <button onclick="downloadAllMods()">Download/Update all mods</button>
+    <button onclick="downloadMods()">Download/Update all mods</button>
   </body>
   <script src="./renderer.js"></script>
 </html>
