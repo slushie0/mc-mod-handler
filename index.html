@@ -14,10 +14,14 @@
     <div id="add-mod">
       <input id="mod-slug" type="text" placeholder="Modrinth Slug">
       <button onclick="addMod()">Add Mod</button>
-      <p id="warning"></p>
+      <p id="slug-warning" class="warning"></p>
     </div>
     <br>
     <button onclick="downloadMods()">Download/Update all mods</button>
+    <p id="download-warning" class="warning"></p>
+    <br>
+    <button onclick="saveData()">Save Data</button>
+    <p id="save-warning" class="warning"></p>
   </body>
   <script src="./renderer.js"></script>
 </html>

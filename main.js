@@ -1,13 +1,22 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
-const { download } = require('electron-dl');
 
-ipcMain.on('download-item', async (event, {url}) => {
-  let win = BrowserWindow.getFocusedWindow();
-  await download(win, url, {
-    directory: app.getPath('downloads') + '/MC Mod Folder'
-  })/*.then(
-    event.sender.send('download-success', url)
-  );*/
+const DownloadManager = require("electron-download-manager");
+
+DownloadManager.register();
+
+ipcMain.on('download-item', async (event, {urls}) => {
+  DownloadManager.bulkDownload({
+    urls: urls,
+    path: "./MC Mod Folder"
+  }, function (error, finished, errors) {
+      if (error) {
+          console.log("finished: " + finished);
+          console.log("errors: " + errors);
+          return;
+      }
+
+      console.log("all finished");
+  });
 });
 
 const createWindow = () => {
