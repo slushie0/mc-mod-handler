@@ -86,19 +86,22 @@ function removeMod(slug) {
 
 function downloadMods() {
   var urls = [];
+  var i = 0;
   fs.rm(app.getPath('downloads')+'/MC Mod Folder', { recursive: true, force: true }, err => {
     if(err) {
       warn('Something went wrong', 'download-warning');
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      console.log(document.getElementById(`enableMod-${key}`).checked);
       if (document.getElementById(`enableMod-${key}`).checked) {
         axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=["${document.getElementById('version').value}"]`).then(res => {
-          if (res.data != []) {
+          i++;
+          if (res.data.length > 0) {
             urls.push(res.data[0].files[0].url);
 
-            if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
+            if (i == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
+          } else {
+            console.log(`no downloads for this version: ${key}`);
           }
         }).catch(err => axiosErr(err, 'download-warning'));
       }
