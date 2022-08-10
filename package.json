@@ -1,12 +1,11 @@
 {
   "name": "mc-mod-handler",
-  "productName": "MC Mod Handler",
   "version": "1.0.0",
   "description": "demo",
   "main": "main.js",
   "scripts": {
     "dev": "electron main.js",
-    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"MC Mod Handler\""
+    "package-win": "electron-packager . mc-mod-handler --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"MC Mod Handler\""
   },
   "repository": {
     "type": "git",
