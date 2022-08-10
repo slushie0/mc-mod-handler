@@ -50,9 +50,9 @@ function refreshModHtml() {
     var enableMod = document.createElement('input');
     rmBtn.innerText = 'remove';
     rmBtn.setAttribute('onclick', `removeMod('${slug}')`);
+    enableMod.id = `enableMod-${slug}`;
     enableMod.type = 'checkbox';
     enableMod.checked = modList[slug].enabled;
-    //enableMod.addEventListener('click', toggleEnabled(slug));
     item.id = slug;
     item.classList.add('mod-item');
     item.innerText = modList[slug].title;
@@ -60,10 +60,6 @@ function refreshModHtml() {
     item.appendChild(rmBtn);
     modListEl.appendChild(item);
   });
-};
-
-function toggleEnabled (slug) {
-  modList[slug].enabled = modList[slug].enabled ? modList[slug].enabled = false : modList[slug].enabled = true;
 };
 
 function addMod() {
@@ -96,11 +92,16 @@ function downloadMods() {
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      axios.get(`https://api.modrinth.com/v2/project/${key}/version`).then(res => {
-        urls.push(res.data[0].files[0].url);
+      console.log(document.getElementById(`enableMod-${key}`).checked);
+      if (document.getElementById(`enableMod-${key}`).checked) {
+        axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=["${document.getElementById('version').value}"]`).then(res => {
+          if (res.data != []) {
+            urls.push(res.data[0].files[0].url);
 
-        if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
-      }).catch(err => axiosErr(err, 'download-warning'));
+            if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
+          }
+        }).catch(err => axiosErr(err, 'download-warning'));
+      }
     });
   });
 };
