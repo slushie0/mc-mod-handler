@@ -1,10 +1,11 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
-
+const remoteMain = require('@electron/remote/main');
+remoteMain.initialize();
 const DownloadManager = require("electron-download-manager");
 
 DownloadManager.register();
 
-ipcMain.on('download-item', async (event, {urls}) => {
+ipcMain.on('download-item', async (event, urls) => {
   DownloadManager.bulkDownload({
     urls: urls,
     path: "MC Mod Folder"
@@ -29,7 +30,7 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
-  win.webContents.send('download-path', app.getPath('downloads'));
+  remoteMain.enable(win.webContents);
 };
 
 app.whenReady().then(() => {

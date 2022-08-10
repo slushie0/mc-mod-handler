@@ -1,24 +1,14 @@
 const path = require('path');
 const fs = require('fs');
-const { ipcRenderer, app } = require('electron')
+const { ipcRenderer } = require('electron');
+const { app } = require('@electron/remote');
 const axios = require('axios');
-
-var downPath = '';
-ipcRenderer.on('download-path', (event, arg) => {
-  downPath = arg;
-});
 
 ipcRenderer.on('download-success', (event, arg) => {
   console.log(arg)
 });
 
-var modList = {
-  /*
-  'mod-slug': {
-    enabled: true,
-  }
-  */
-};
+var modList = {};
 
 var modQueue = [];
 
@@ -59,7 +49,7 @@ function refreshModHtml() {
     var rmBtn = document.createElement('button');
     var enableMod = document.createElement('input');
     rmBtn.innerText = 'remove';
-    //rmBtn.setAttribute('onclick', removeMod(slug));
+    rmBtn.setAttribute('onclick', `removeMod('${slug}')`);
     enableMod.type = 'checkbox';
     enableMod.checked = modList[slug].enabled;
     //enableMod.addEventListener('click', toggleEnabled(slug));
@@ -100,7 +90,7 @@ function removeMod(slug) {
 
 function downloadMods() {
   var urls = [];
-  fs.rm(downPath+'/MC Mod Folder', { recursive: true, force: true }, err => {
+  fs.rm(app.getPath('downloads')+'/MC Mod Folder', { recursive: true, force: true }, err => {
     if(err) {
       warn('Something went wrong', 'download-warning');
       console.error(err.message);
@@ -109,7 +99,7 @@ function downloadMods() {
       axios.get(`https://api.modrinth.com/v2/project/${key}/version`).then(res => {
         urls.push(res.data[0].files[0].url);
 
-        if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', {urls});
+        if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
       }).catch(err => axiosErr(err, 'download-warning'));
     });
   });
