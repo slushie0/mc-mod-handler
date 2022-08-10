@@ -7,7 +7,7 @@ DownloadManager.register();
 ipcMain.on('download-item', async (event, {urls}) => {
   DownloadManager.bulkDownload({
     urls: urls,
-    path: "./MC Mod Folder"
+    path: "MC Mod Folder"
   }, function (error, finished, errors) {
       if (error) {
           console.log("finished: " + finished);
@@ -29,7 +29,7 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
-  win.webContents.send('asynchronous-message', {'appData': app.getPath('appData'), 'downloads': app.getPath('downloads')});
+  win.webContents.send('download-path', app.getPath('downloads'));
 };
 
 app.whenReady().then(() => {

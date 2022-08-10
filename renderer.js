@@ -3,6 +3,11 @@ const fs = require('fs');
 const { ipcRenderer, app } = require('electron')
 const axios = require('axios');
 
+var downPath = '';
+ipcRenderer.on('download-path', (event, arg) => {
+  downPath = arg;
+});
+
 ipcRenderer.on('download-success', (event, arg) => {
   console.log(arg)
 });
@@ -32,7 +37,7 @@ loadData();
 
 function saveData() {
   try {
-  fs.writeFile(`./mc-mod-handler.txt`, JSON.stringify(modLists), err => { 
+  fs.writeFile(`./mc-mod-handler.txt`, JSON.stringify(modList), err => { 
     if (err) {
       warn('Could not save mod list', 'save-warning')
       console.error(err);
@@ -84,9 +89,7 @@ function addMod() {
       };
       refreshModHtml();
       clearWarns();
-    }).catch(function(err) {
-      return axiosErr(err);
-    })
+    }).catch(err => axiosErr(err, 'slug-warning'));
   } catch (err) { /*return warn('Something went wrong')*/ console.error(err) }
 };
 
@@ -97,15 +100,17 @@ function removeMod(slug) {
 
 function downloadMods() {
   var urls = [];
-  fs.rm('./MC Mod Folder', { recursive: true, force: true }, err => {
-    if(err) return console.error(err.message);
-    
+  fs.rm(downPath+'/MC Mod Folder', { recursive: true, force: true }, err => {
+    if(err) {
+      warn('Something went wrong', 'download-warning');
+      console.error(err.message);
+    }
     Object.keys(modList).forEach((key, index) => {
       axios.get(`https://api.modrinth.com/v2/project/${key}/version`).then(res => {
         urls.push(res.data[0].files[0].url);
-        
+
         if (urls.length == Object.keys(modList).length) ipcRenderer.send('download-item', {urls});
-      });
+      }).catch(err => axiosErr(err, 'download-warning'));
     });
   });
 };
@@ -122,8 +127,8 @@ function clearWarns() {
   }
 }
 
-function axiosErr (error) {
-  warn('Something went wrong.', 'slug-warning');
+function axiosErr (error, el) {
+  warn('Something went wrong.', el);
   console.log('ERROR');
   console.error(error);
   if (error.response) {
