@@ -31,18 +31,8 @@ body {
   margin-left: 20px;
   min-width: 300px;
 }
-#download-featured-el {
-  margin-top: 18px;
-}
-#save-btn {
-  margin-right: 10px;
-}
 
 .warning {
   font-size: 12px;
   color: red;
-}
-
-.btn-primary {
-  float: right;
 }
