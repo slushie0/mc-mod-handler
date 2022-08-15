@@ -46,17 +46,25 @@ function refreshModHtml() {
     // dom manipulation
     var slug = key;
     var item = document.createElement('li');
-    var rmBtn = document.createElement('button');
     var enableMod = document.createElement('input');
+    var label = document.createElement('label');
+    var rmBtn = document.createElement('button');
     rmBtn.innerText = 'remove';
     rmBtn.setAttribute('onclick', `removeMod('${slug}')`);
+    rmBtn.type = 'button';
+    rmBtn.classList = 'btn btn-danger btn-sm rm-btn';
     enableMod.id = `enableMod-${slug}`;
     enableMod.type = 'checkbox';
+    enableMod.value = '';
     enableMod.checked = modList[slug].enabled;
+    enableMod.classList = 'form-check-input me-1';
+    label.setAttribute('for', `enableMod-${slug}`);
+    label.classList = 'form-check-label stretched-link';
+    label.innerText = modList[slug].title;
     item.id = slug;
-    item.classList.add('mod-item');
-    item.innerText = modList[slug].title;
+    item.classList = 'mod-item list-group-item';
     item.prepend(enableMod);
+    item.appendChild(label);
     item.appendChild(rmBtn);
     modListEl.appendChild(item);
   });
@@ -92,9 +100,11 @@ function downloadMods() {
       warn('Something went wrong', 'download-warning');
       console.error(err.message);
     }
+    console.log(document.getElementById('version').value);
     Object.keys(modList).forEach((key, index) => {
       if (document.getElementById(`enableMod-${key}`).checked) {
-        axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=["${document.getElementById('version').value}"]`).then(res => {
+        let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
+        axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=["${document.getElementById('version').value}"]${downloadFeatured}`).then(res => {
           i++;
           if (res.data.length > 0) {
             urls.push(res.data[0].files[0].url);

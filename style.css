@@ -4,11 +4,25 @@
 }
 body {
   font-family: 'Inter', sans-serif;
+  padding: 20px;
+}
+
+#mod-slug {
+  max-width: 600px;
 }
 
 #mod-list {
-  list-style-type: none;
-  padding-left: 0;
+  min-width: 300px;
+  width: min-content;
+}
+
+.mod-item > button {
+  float: right;
+}
+
+.rm-btn {
+  z-index: 2;
+  position: relative;
 }
 
 .warning {
