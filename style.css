@@ -11,21 +11,38 @@ body {
   max-width: 600px;
 }
 
+#mod-list-el {
+  float: left;
+}
 #mod-list {
   min-width: 300px;
   width: min-content;
 }
-
 .mod-item > button {
   float: right;
 }
-
 .rm-btn {
   z-index: 2;
   position: relative;
 }
 
+#settings {
+  float: left;
+  margin-left: 20px;
+  min-width: 300px;
+}
+#download-featured-el {
+  margin-top: 18px;
+}
+#save-btn {
+  margin-right: 10px;
+}
+
 .warning {
   font-size: 12px;
   color: red;
+}
+
+.btn-primary {
+  float: right;
 }

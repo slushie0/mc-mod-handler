@@ -12,13 +12,23 @@
       <input type="text" id="mod-slug" class="form-control" placeholder="Modrinth Slug" aria-label="Modrinth Slug" aria-describedby="basic-addon2">
       <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="addMod()">Add Mod</button>
     </div>
-    <h1>Mod List:</h1>
+    <p id="slug-warning" class="warning"></p>
     <div id="mod-list-el">
+      <h1>Mod List:</h1>
       <ul id="mod-list" class="list-group"></ul>
     </div>
-    <p id="slug-warning" class="warning"></p>
-    <br>
-    <span>Only download featured releases:</span><input type="checkbox" checked id="download-featured">
+    <div id="settings">
+      <h1>Settings:</h1>
+      <button type="button" class="btn btn-primary" onclick="downloadMods()">Download/Update all mods</button>
+      <button type="button" class="btn btn-primary" id="save-btn" onclick="saveData()">Save Data</button>
+      <p id="download-warning save-warning" class="warning"></p>
+      <br>
+      <ul class="list-group" id="download-featured-el">
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" checked id="download-featured">
+          <label class="form-check-label stretched-link" for="download-featured">Only download featured releases</label>
+        </li>
+      </ul>
     <br>
     <select name="version" id="version" multiple>
       <option value="1.19.2">1.19.2</option>
@@ -45,11 +55,7 @@
       <option value="1.14">1.14</option>
     </select>
     <span>(prefer newest version)</span>
-    <button onclick="downloadMods()">Download/Update all mods</button>
-    <p id="download-warning" class="warning"></p>
-    <br>
-    <button onclick="saveData()">Save Data</button>
-    <p id="save-warning" class="warning"></p>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
     <script src="./renderer.js"></script>
   </body>
