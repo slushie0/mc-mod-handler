@@ -118,7 +118,7 @@ function removeMod(slug) {
 
 function downloadMods() {
   var urls = [];
-  var mods = [];
+  let mods = [];
   var i = 0;
   var list = document.getElementById('version-select').children;
   let versions = [];
@@ -131,18 +131,19 @@ function downloadMods() {
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      if (document.getElementById(`enableMod-${key}`).checked) {
-        mods.push(key);
+      if (modList[i].enabled)) {
+        modList.push(key);
       }
     });
     for (let i = 0; i < mods.length; i++) {
       let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]${downloadFeatured}&loaders=["fabric"]`).then(res => {
+      axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=[${versions}]${downloadFeatured}`).then(res => {
         if (res.data.length > 0) {
           urls.push(res.data[0].files[0].url);
-          if (i == mods.length-1) ipcRenderer.send('download-item', urls);
+
+          if (i == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
         } else {
-          console.log(`no downloads for this version: ${mods[i]}`);
+          console.log(`no downloads for this version: ${key}`);
         }
       }).catch(err => axiosErr(err, 'download-warning'));
     }
