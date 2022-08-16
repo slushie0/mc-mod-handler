@@ -27,6 +27,7 @@ function loadVersions() {
         label.classList = 'form-check-label stretched-link';
         label.innerText = res.data.game[i].version;
         label.setAttribute('for', res.data.game[i].version);
+        if (i == 0) selectVersion.checked = true;
         item.appendChild(selectVersion);
         item.appendChild(label);
         con.appendChild(item);
@@ -63,6 +64,10 @@ function saveData() {
   }
 };
 
+function updateEnabled(slug) {
+  modList[slug].enabled = document.getElementById(`enableMod-${slug}`).checked;
+}
+
 function refreshModHtml() {
   var modListEl = document.getElementById('mod-list');
   modListEl.innerHTML = '';
@@ -82,6 +87,7 @@ function refreshModHtml() {
     enableMod.value = '';
     enableMod.checked = modList[slug].enabled;
     enableMod.classList = 'form-check-input me-1';
+    enableMod.setAttribute('onclick', `updateEnabled(${slug})`);
     label.setAttribute('for', `enableMod-${slug}`);
     label.classList = 'form-check-label stretched-link';
     label.innerText = modList[slug].title;
@@ -119,7 +125,6 @@ function removeMod(slug) {
 function downloadMods() {
   var urls = [];
   let mods = [];
-  var i = 0;
   var list = document.getElementById('version-select').children;
   let versions = [];
   for (let i = 0; i < list.length; i++) {
@@ -131,19 +136,25 @@ function downloadMods() {
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      if (modList[i].enabled) {
-        modList.push(key);
+      if (modList[key].enabled) {
+        mods.push(key);
       }
     });
     for (let i = 0; i < mods.length; i++) {
       let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-      axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=[${versions}]${downloadFeatured}`).then(res => {
+      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]${downloadFeatured}`).then(res => {
         if (res.data.length > 0) {
-          urls.push(res.data[0].files[0].url);
-
-          if (i == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
+          console.log('ee')
+          if (document.getElementById('download-stable').checked) {
+            if (res.data[0].version_type == "release") {
+              urls.push(res.data[0].files[0].url);
+            }
+          } else {
+            urls.push(res.data[0].files[0].url);
+          }
+          if (i == mods.length-1) ipcRenderer.send('download-item', urls);
         } else {
-          console.log(`no downloads for this version: ${key}`);
+          console.log(`no downloads for this version: ${mods[i]}`);
         }
       }).catch(err => axiosErr(err, 'download-warning'));
     }
