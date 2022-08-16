@@ -12,6 +12,29 @@ var modList = {};
 
 var modQueue = [];
 
+function loadVersions() {
+  axios.get(`https://meta.fabricmc.net/v1/versions`).then(res => {
+    let con = document.getElementById('version-select');
+    for (let i in res.data.game) {
+      if (res.data.game[i].stable) {
+        let item = document.createElement('li');
+        let selectVersion = document.createElement('input');
+        let label = document.createElement('label');
+        item.classList = 'list-group-item';
+        selectVersion.classList = 'form-check-input me-1'
+        selectVersion.type = 'checkbox';
+        selectVersion.id = res.data.game[i].version;
+        label.classList = 'form-check-label stretched-link';
+        label.innerText = res.data.game[i].version;
+        label.setAttribute('for', res.data.game[i].version);
+        item.appendChild(selectVersion);
+        item.appendChild(label);
+        con.appendChild(item);
+      }
+    }
+  }).catch(err => axiosErr(err));
+};
+
 function loadData() {
   fs.readFile(`./mc-mod-handler.txt`, 'utf8', (err, data) => {
         
@@ -24,6 +47,7 @@ function loadData() {
 };
 
 loadData();
+loadVersions();
 
 function saveData() {
   try {
@@ -94,28 +118,34 @@ function removeMod(slug) {
 
 function downloadMods() {
   var urls = [];
+  var mods = [];
   var i = 0;
+  var list = document.getElementById('version-select').children;
+  let versions = [];
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].children[0].checked) versions.push(JSON.stringify(list[i].children[1].innerText));
+  }
   fs.rm(app.getPath('downloads')+'/MC Mod Folder', { recursive: true, force: true }, err => {
     if(err) {
       warn('Something went wrong', 'download-warning');
       console.error(err.message);
     }
-    console.log(document.getElementById('version').value);
     Object.keys(modList).forEach((key, index) => {
       if (document.getElementById(`enableMod-${key}`).checked) {
-        let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-        axios.get(`https://api.modrinth.com/v2/project/${key}/version?game_versions=["${document.getElementById('version').value}"]${downloadFeatured}`).then(res => {
-          i++;
-          if (res.data.length > 0) {
-            urls.push(res.data[0].files[0].url);
-
-            if (i == Object.keys(modList).length) ipcRenderer.send('download-item', urls);
-          } else {
-            console.log(`no downloads for this version: ${key}`);
-          }
-        }).catch(err => axiosErr(err, 'download-warning'));
+        mods.push(key);
       }
     });
+    for (let i = 0; i < mods.length; i++) {
+      let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
+      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]${downloadFeatured}&loaders=["fabric"]`).then(res => {
+        if (res.data.length > 0) {
+          urls.push(res.data[0].files[0].url);
+          if (i == mods.length-1) ipcRenderer.send('download-item', urls);
+        } else {
+          console.log(`no downloads for this version: ${mods[i]}`);
+        }
+      }).catch(err => axiosErr(err, 'download-warning'));
+    }
   });
 };
 

@@ -32,6 +32,10 @@ body {
   min-width: 321px;
   width: min-content;
 }
+#version-select {
+  min-width: 321px;
+  width: min-content;
+}
 
 .warning {
   font-size: 12px;

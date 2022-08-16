@@ -15,17 +15,23 @@
     <p id="slug-warning" class="warning"></p>
     <div id="mod-list-el">
       <h1>Mod List:</h1>
+      <p>Currently only compatible with Fabric mods</p>
       <ul id="mod-list" class="list-group"></ul>
     </div>
     <div id="settings">
       <h1>Settings:</h1>
       <button type="button" class="btn btn-primary" onclick="downloadMods()">Download/Update all mods</button>
       <button type="button" class="btn btn-primary" id="save-btn" onclick="saveData()">Save Data</button>
-      <p id="download-warning save-warning" class="warning"></p>
+      <p id="download-warning" class="warning"></p>
+      <p id="save-warning" class="warning"></p>
       <ul class="list-group" id="download-featured-el">
         <li class="list-group-item">
           <input class="form-check-input me-1" type="checkbox" value="" checked id="download-featured">
           <label class="form-check-label stretched-link" for="download-featured">Only download featured releases</label>
+        </li>
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" value="" checked id="download-stable">
+          <label class="form-check-label stretched-link" for="download-stable">Only download stable releases</label>
         </li>
       </ul>
       <br>
