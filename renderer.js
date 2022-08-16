@@ -131,7 +131,7 @@ function downloadMods() {
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      if (modList[i].enabled)) {
+      if (modList[i].enabled) {
         modList.push(key);
       }
     });
