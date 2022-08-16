@@ -51,6 +51,9 @@ loadData();
 loadVersions();
 
 function saveData() {
+  Object.keys(modList).forEach((key, index) => {
+    modList[key].enabled = document.getElementById(`enableMod-${key}`).checked;
+  });
   try {
   fs.writeFile(`./mc-mod-handler.txt`, JSON.stringify(modList), err => { 
     if (err) {
@@ -63,10 +66,6 @@ function saveData() {
     console.error(err);
   }
 };
-
-function updateEnabled(slug) {
-  modList[slug].enabled = document.getElementById(`enableMod-${slug}`).checked;
-}
 
 function refreshModHtml() {
   var modListEl = document.getElementById('mod-list');
@@ -87,7 +86,6 @@ function refreshModHtml() {
     enableMod.value = '';
     enableMod.checked = modList[slug].enabled;
     enableMod.classList = 'form-check-input me-1';
-    enableMod.setAttribute('onclick', `updateEnabled(${slug})`);
     label.setAttribute('for', `enableMod-${slug}`);
     label.classList = 'form-check-label stretched-link';
     label.innerText = modList[slug].title;
@@ -136,7 +134,7 @@ function downloadMods() {
       console.error(err.message);
     }
     Object.keys(modList).forEach((key, index) => {
-      if (modList[key].enabled) {
+      if (document.getElementById(`enableMod-${key}`).checked) {
         mods.push(key);
       }
     });
