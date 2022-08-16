@@ -19,7 +19,7 @@ npm run dev
 ```
 
 ### Building
-Currently I only set up support for windows, I have no idea how or if it will function on other platforms
+Currently it only supports windows, I have no idea how or if it will function on other platforms
 
 ```bash
 npm run package-win
