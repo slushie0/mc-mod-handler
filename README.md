@@ -1,6 +1,6 @@
 # MC Mod Handler
 
-MC Mod Handler is an Electron app designed to make it easier and faster to handle and update your mods without an ugly or slow launcher or app.
+MC Mod Handler is an Electron app designed to make it easier and faster to handle and update your Minecraft mods without an ugly or slow launcher or app.
 
 ## Installation (For most people)
 
