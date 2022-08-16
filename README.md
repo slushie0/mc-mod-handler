@@ -18,6 +18,14 @@ npm i
 npm run dev
 ```
 
+### Building
+Currently I only set up support for windows, I have no idea how or if it will function on other platforms
+
+```bash
+npm run package-win
+```
+
+This will create a `release-builds` folder containing the built app
 
 ## Usage
 
