@@ -4,15 +4,19 @@ const { ipcRenderer } = require('electron');
 const { app } = require('@electron/remote');
 const axios = require('axios');
 
-ipcRenderer.on('download-success', (event, arg) => {
-  console.log(arg)
-});
-
 var modList = {};
 
 var modQueue = [];
 
-function loadVersions() {
+function loadData() {
+  fs.readFile(`./mc-mod-handler.txt`, 'utf8', (err, data) => {
+        
+    // save the data to the variable
+    modList = JSON.parse(data);
+
+    // add the mods to the ui
+    refreshModHtml();
+  });
   axios.get(`https://meta.fabricmc.net/v1/versions`).then(res => {
     let con = document.getElementById('version-select');
     for (let i in res.data.game) {
@@ -36,19 +40,7 @@ function loadVersions() {
   }).catch(err => axiosErr(err));
 };
 
-function loadData() {
-  fs.readFile(`./mc-mod-handler.txt`, 'utf8', (err, data) => {
-        
-    // save the data to the variable
-    modList = JSON.parse(data);
-
-    // add the mods to the ui
-    refreshModHtml();
-  });
-};
-
 loadData();
-loadVersions();
 
 function saveData() {
   Object.keys(modList).forEach((key, index) => {
@@ -125,6 +117,7 @@ function downloadMods() {
   let mods = [];
   var list = document.getElementById('version-select').children;
   let versions = [];
+  let verifyAxios = 0;
   for (let i = 0; i < list.length; i++) {
     if (list[i].children[0].checked) versions.push(JSON.stringify(list[i].children[1].innerText));
   }
@@ -140,20 +133,22 @@ function downloadMods() {
     });
     for (let i = 0; i < mods.length; i++) {
       let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]${downloadFeatured}`).then(res => {
+      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]&loaders=["fabric","quilt"]${downloadFeatured}`).then(res => {
         if (res.data.length > 0) {
-          console.log('ee')
           if (document.getElementById('download-stable').checked) {
             if (res.data[0].version_type == "release") {
               urls.push(res.data[0].files[0].url);
+            } else {
+              console.log(`first mod found not stable: ${mods[i]}`);
             }
           } else {
             urls.push(res.data[0].files[0].url);
           }
-          if (i == mods.length-1) ipcRenderer.send('download-item', urls);
         } else {
           console.log(`no downloads for this version: ${mods[i]}`);
         }
+        verifyAxios++;
+        if (verifyAxios == mods.length) ipcRenderer.send('download-item', urls);
       }).catch(err => axiosErr(err, 'download-warning'));
     }
   });
