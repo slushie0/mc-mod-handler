@@ -133,19 +133,18 @@ function downloadMods() {
     });
     for (let i = 0; i < mods.length; i++) {
       let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]&loaders=["fabric","quilt"]${downloadFeatured}`).then(res => {
+      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]&loaders=["quilt"]${downloadFeatured}`).then(res => {
         if (res.data.length > 0) {
           if (document.getElementById('download-stable').checked) {
-            if (res.data[0].version_type == "release") {
-              urls.push(res.data[0].files[0].url);
-            } else {
-              console.log(`first mod found not stable: ${mods[i]}`);
+            for (let j in res.data) {
+              if (res.data[j].version_type == "release") {
+                urls.push(res.data[j].files[0].url);
+                break;
+              }
             }
           } else {
             urls.push(res.data[0].files[0].url);
           }
-        } else {
-          console.log(`no downloads for this version: ${mods[i]}`);
         }
         verifyAxios++;
         if (verifyAxios == mods.length) ipcRenderer.send('download-item', urls);
