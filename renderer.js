@@ -133,7 +133,7 @@ function downloadMods() {
     });
     for (let i = 0; i < mods.length; i++) {
       let downloadFeatured = document.getElementById('download-featured').checked ? '&featured=true' : '';
-      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]&loaders=["quilt"]${downloadFeatured}`).then(res => {
+      axios.get(`https://api.modrinth.com/v2/project/${mods[i]}/version?game_versions=[${versions}]&loaders=["fabric","quilt"]${downloadFeatured}`).then(res => {
         if (res.data.length > 0) {
           if (document.getElementById('download-stable').checked) {
             for (let j in res.data) {
